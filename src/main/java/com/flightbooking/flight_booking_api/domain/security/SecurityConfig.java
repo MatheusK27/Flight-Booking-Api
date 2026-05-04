@@ -1,6 +1,5 @@
-package com.flightbooking.flight_booking_api.domain;
+package com.flightbooking.flight_booking_api.domain.security;
 
-import com.flightbooking.flight_booking_api.domain.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
