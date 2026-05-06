@@ -30,7 +30,7 @@ public class AuthService {
         }
 
         var user = User.builder()
-                .name(request.nome())
+                .name(request.name())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(UserRole.PASSANGER)

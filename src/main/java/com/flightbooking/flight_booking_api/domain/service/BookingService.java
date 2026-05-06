@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class BokkingService {
+public class BookingService {
 
     private FlightRepository flightRepository;
     private UserRepository userRepository;
