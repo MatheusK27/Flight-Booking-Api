@@ -8,17 +8,19 @@ import com.flightbooking.flight_booking_api.domain.enums.BookingStatus;
 import com.flightbooking.flight_booking_api.domain.repository.BookingRepository;
 import com.flightbooking.flight_booking_api.domain.repository.FlightRepository;
 import com.flightbooking.flight_booking_api.domain.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookingService {
 
-    private FlightRepository flightRepository;
-    private UserRepository userRepository;
-    private BookingRepository bookingRepository;
+    private final FlightRepository flightRepository;
+    private final  UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     public BookingResponse create(BookingRequest request,String email) {
         var user= userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
