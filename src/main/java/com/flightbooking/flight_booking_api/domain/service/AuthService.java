@@ -8,6 +8,7 @@ import com.flightbooking.flight_booking_api.domain.entidade.User;
 import com.flightbooking.flight_booking_api.domain.enums.UserRole;
 import com.flightbooking.flight_booking_api.domain.repository.UserRepository;
 import com.flightbooking.flight_booking_api.domain.security.JwtService;
+import com.flightbooking.flight_booking_api.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +45,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
-        var user =  repository.findByEmail(request.email()).orElseThrow(()-> new RuntimeException("User not found"));
+        var user =  repository.findByEmail(request.email()).orElseThrow(()-> new BusinessException("User not found"));
        String token=jwtService.generateToken(user);
        return new AuthResponse(token,user.getName(),user.getEmail());
     }

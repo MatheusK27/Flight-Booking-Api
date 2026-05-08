@@ -6,6 +6,7 @@ import com.flightbooking.flight_booking_api.domain.entidade.Flight;
 import com.flightbooking.flight_booking_api.domain.enums.FlightStatus;
 import com.flightbooking.flight_booking_api.domain.repository.AirportRepository;
 import com.flightbooking.flight_booking_api.domain.repository.FlightRepository;
+import com.flightbooking.flight_booking_api.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ public class FlightService {
 
     public FlightResponse create(FlightRequest request) {
         var origin = airportRepository.findById(request.originId())
-                .orElseThrow(() -> new RuntimeException("Aeroporto de origem não encontrado"));
+                .orElseThrow(() -> new BusinessException("Aeroporto de origem não encontrado"));
 
         var destination = airportRepository.findById(request.destinationId())
-                .orElseThrow(() -> new RuntimeException("Aeroporto de destino não encontrado"));
+                .orElseThrow(() -> new BusinessException("Aeroporto de destino não encontrado"));
 
         var flight = Flight.builder()
                 .flightNumber(request.flightNumber())
@@ -46,9 +47,9 @@ public class FlightService {
 
     public List<FlightResponse> search(String originCode, String destinationCode, LocalDateTime date) {
         var origin = airportRepository.findByCode(originCode)
-                .orElseThrow(() -> new RuntimeException("Aeroporto de origem não encontrado"));
+                .orElseThrow(() -> new BusinessException("Aeroporto de origem não encontrado"));
         var destination = airportRepository.findByCode(destinationCode)
-                .orElseThrow(() -> new RuntimeException("Aeroporto de destino não encontrado"));
+                .orElseThrow(() -> new BusinessException("Aeroporto de destino não encontrado"));
         return flightRepository.findByOriginAndDestinationAndDepartureTimeBetween(
                         origin, destination, date.toLocalDate().atStartOfDay(), date.toLocalDate().atTime(23, 59))
                 .stream()

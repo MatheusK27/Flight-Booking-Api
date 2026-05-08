@@ -8,6 +8,7 @@ import com.flightbooking.flight_booking_api.domain.enums.BookingStatus;
 import com.flightbooking.flight_booking_api.domain.repository.BookingRepository;
 import com.flightbooking.flight_booking_api.domain.repository.FlightRepository;
 import com.flightbooking.flight_booking_api.domain.repository.UserRepository;
+import com.flightbooking.flight_booking_api.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,16 @@ public class BookingService {
     private final BookingRepository bookingRepository;
 
     public BookingResponse create(BookingRequest request,String email) {
-        var user= userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
+        var user= userRepository.findByEmail(email).orElseThrow(()-> new BusinessException("Usuário não encontrado"));
 
-        var flight = flightRepository.findById(request.flightId()).orElseThrow(()-> new RuntimeException("Voo não encontrado"));
+        var flight = flightRepository.findById(request.flightId()).orElseThrow(()-> new BusinessException("Voo não encontrado"));
 
         if(flight.getAvailableSeats()<=0){
-            throw new RuntimeException ("Não há assentos disponíveis!");
+            throw new BusinessException ("Não há assentos disponíveis!");
 
         }
         if (bookingRepository.existsByFlightAndSeatNumber(flight, request.seatNumber())){
-            throw new RuntimeException("Assento já ocupado!");
+            throw new BusinessException("Assento já ocupado!");
         }
 
         flight.setAvailableSeats(flight.getAvailableSeats()-1);
@@ -53,7 +54,7 @@ public class BookingService {
     }
 
     public List<BookingResponse>findByUser(String email){
-        var user= userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
+        var user= userRepository.findByEmail(email).orElseThrow(()-> new BusinessException("Usuário não encontrado"));
 
         return bookingRepository.findByUser(user)
                 .stream()
@@ -62,14 +63,14 @@ public class BookingService {
     }
 
     public BookingResponse cancel(Long id, String email){
-        var booking = bookingRepository.findById(id).orElseThrow(()->new RuntimeException("Reserva não encontrada"));
+        var booking = bookingRepository.findById(id).orElseThrow(()->new BusinessException("Reserva não encontrada"));
 
         if(!booking.getUser().getEmail().equals(email)){
-            throw new RuntimeException("Usuário não tem permissão pra cancelar");
+            throw new BusinessException("Usuário não tem permissão pra cancelar");
 
         }
         if(booking.getStatus()==BookingStatus.CANCELLED){
-            throw new RuntimeException("Reserva já cancelada!");
+            throw new BusinessException("Reserva já cancelada!");
         }
 
         booking.setStatus(BookingStatus.CANCELLED);
