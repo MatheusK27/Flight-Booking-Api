@@ -10,6 +10,7 @@ import com.flightbooking.flight_booking_api.domain.repository.UserRepository;
 import com.flightbooking.flight_booking_api.domain.security.JwtService;
 import com.flightbooking.flight_booking_api.domain.service.AuthService;
 import com.flightbooking.flight_booking_api.exception.BusinessException;
+import com.flightbooking.flight_booking_api.exception.ConflictException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,7 +72,7 @@ import static org.mockito.Mockito.*;
             when(userRepository.existsByEmail("joao@email.com")).thenReturn(true);
 
             // ACT + ASSERT
-            assertThrows(BusinessException.class, () -> authService.register(request));
+            assertThrows(ConflictException.class, () -> authService.register(request));
             verify(userRepository, never()).save(any());
         }
 

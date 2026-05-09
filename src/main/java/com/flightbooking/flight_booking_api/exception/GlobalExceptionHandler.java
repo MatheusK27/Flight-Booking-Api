@@ -35,5 +35,11 @@ import java.util.stream.Collectors;
             return ResponseEntity.internalServerError()
                     .body(new ErrorResponse("Erro interno do servidor", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
+
+        @ExceptionHandler(ConflictException.class)
+        public ResponseEntity<ErrorResponse> handleConflictException(ConflictException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value()));
+        }
     }
 

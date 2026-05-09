@@ -9,6 +9,7 @@ import com.flightbooking.flight_booking_api.domain.enums.UserRole;
 import com.flightbooking.flight_booking_api.domain.repository.UserRepository;
 import com.flightbooking.flight_booking_api.domain.security.JwtService;
 import com.flightbooking.flight_booking_api.exception.BusinessException;
+import com.flightbooking.flight_booking_api.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if(repository.existsByEmail(request.email())) {
-            throw new UsernameNotFoundException("Email já cadastrado");
+            throw new ConflictException("Email já cadastrado");
         }
 
         var user = User.builder()
